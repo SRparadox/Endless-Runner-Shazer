@@ -1,11 +1,7 @@
 // Shazer Rizzo
-// Rocket Patrol: The Rise of The Rocket
-// 12 hours
-// Mod 1 (3 Points) Create 4 new random explosion effects
-// Mod 2 (5 Points) Create a new Spaceship that is faster and smaller and worth more
-// Mod 3 (3 Points) Create new title screen
-// Mod 4 (1 Point) Adds Fire UI element
-// Mod 5 (3 Points) Displays the time remaining on screen
+// Endless Runner: Man-Man vs Killer Clowns
+// 30 hours
+// I am proud of being able to implement class techniques taught and being able to implement through my own direction
 
 let config = {
   type: Phaser.AUTO,
