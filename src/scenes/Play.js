@@ -1,5 +1,5 @@
 //Shazer Rizzo
-//Rocket Patrol Project
+//Endless Runner Project
 
 class Play extends Phaser.Scene {
     constructor() {
@@ -7,105 +7,92 @@ class Play extends Phaser.Scene {
     }
 
     create() {
-        this.RANDOMSOUND = 0
-
+        this.Music = this.sound.add('Music');
         // place tile sprite
-        this.starfield = this.add.tileSprite(0, 0, 640, 480, 'starfield').setOrigin(0, 0)
-        // green UI background
-        this.add.rectangle(0, borderUISize + borderPadding, game.config.width, borderUISize * 2, 0x00FF00).setOrigin(0, 0)
-        // white borders
-        this.add.rectangle(0, 0, game.config.width, borderUISize, 0xFFFFFF).setOrigin(0, 0)
-        this.add.rectangle(0, game.config.height - borderUISize, game.config.width, borderUISize, 0xFFFFFF).setOrigin(0, 0)
-        this.add.rectangle(0, 0, borderUISize, game.config.height, 0xFFFFFF).setOrigin(0, 0);
-        this.add.rectangle(game.config.width - borderUISize, 0, borderUISize, game.config.height, 0xFFFFFF).setOrigin(0, 0)
+        this.starfield = this.add.tileSprite(0, 0, 640, 480, 'City').setOrigin(0, 0)
 
-        // add rocket (p1)
-        this.p1Rocket = new Rocket(this, game.config.width/2, game.config.height - borderUISize - borderPadding, 'rocket').setOrigin(0.5, 0)
-        // add spaceships (x3)
-        this.ship01 = new Spaceship(this, game.config.width + borderUISize*6, borderUISize*4, 'spaceship', 0, 30, 'Normal').setOrigin(0, 0)
-        this.ship02 = new Spaceship(this, game.config.width + borderUISize*3, borderUISize*5 + borderPadding*2, 'spaceship2', 0, 40, 'Fast').setOrigin(0,0)
-        this.ship03 = new Spaceship(this, game.config.width, borderUISize*6 + borderPadding*4, 'spaceship', 0, 10, 'Normal').setOrigin(0,0)
+        // add Car (p1)
+        this.p1car = new Car(this, game.config.width/5, game.config.height - borderUISize - borderPadding - 25, 'Car').setOrigin(0.5, 0)
+        // add Clowns (x2)
+        this.topclown = new Clown(this, game.config.width + borderUISize*3, borderUISize*9 + borderPadding*2, 'Clown', 0, 40, 'Normal').setOrigin(0,0)
+        this.bottomclown = new Clown(this, game.config.width, borderUISize*11 + borderPadding*4, 'Clown', 0, 10, 'Fast').setOrigin(0,0)
 
         // define keys
         keyFIRE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F)
         keyRESET = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R)
         keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT)
         keyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT)
-        //this.cursors = this.input.keyboard.createCursorKeys(); //Mod5
         // initialize score
         this.p1Score = 0
         // display score
         let scoreConfig = {
             fontFamily: 'Courier',
-            fontSize: '28px',
-            backgroundColor: '#F3B141',
-            color: '#843605',
+            fontSize: '20px',
+            backgroundColor: '#808080',
+            color: '#FF2800',
             align: 'right',
             padding: {
             top: 5,
             bottom: 5,
             },
-            fixedWidth: 100
+            fixedWidth: 200
         }
-        this.scoreLeft = this.add.text(borderUISize + borderPadding, borderUISize + borderPadding*2, this.p1Score, scoreConfig)
-        this.FireElement = this.add.text(borderUISize + 300, borderUISize + borderPadding*2, 'FIRE ', scoreConfig) //Mod 4 Fire Element
-
+        this.scoreLeft = this.add.text(borderUISize + borderPadding, borderUISize + borderPadding*2, ' ', scoreConfig)
+        this.FireElement = this.add.text(borderUISize + 300, borderUISize + borderPadding*2, 'Avoid the Clowns!', scoreConfig) //JUMP SIGN
         // GAME OVER flag
         this.gameOver = false
+
+        // play Music
+        this.Music.setLoop(true);
+        this.Music.play();
         
         //Displaying the clock  REFERENCE: https://phaser.discourse.group/t/countdown-timer/2471/4
         //Initialization
-        this.initialTime = game.settings.gameTimer / 1000;
+        this.initialTime = 1;
         //Initial Time
-        this.Text = this.add.text(440, borderUISize + borderPadding + 10, 'Time:' + this.formatTime(this.initialTime));
+        this.Text = this.add.text(borderUISize + borderPadding + 9, borderUISize + borderPadding*2 + 10, 'Time:' + this.formatTime(this.initialTime));
         //EVERY Second Update
         this.timedEvent = this.time.addEvent({ delay: 1000, callback: this.onEvent, callbackScope: this, loop: true });
 
 
         // 60-second play clock  THIS SET THE GAME OVER EVENT//// HAVE TO CHANGE THIS FOR MOD 6 because it has to be initialized as initial time
         scoreConfig.fixedWidth = 0
-        //this.clock = this.time.delayedCall(game.settings.gameTimer, () => {
-        //    this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', scoreConfig).setOrigin(0.5)
-        //    this.add.text(game.config.width/2, game.config.height/2 + 64, 'Press (R) to Restart or <- for Menu', scoreConfig).setOrigin(0.5)
-        //    this.gameOver = true
-        //}, null, this)
-
-
-
     }
 
     update() {
         
-        // Have to move the end game screen here so that the condition changes with the new time changes from mod 6
-        // WHY IS THE END SCREEN NOT THE SAME COLOR AS BEFORE
-        if (this.initialTime <= 0) {
-            this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', this.scoreConfig).setOrigin(0.5)
-            this.add.text(game.config.width/2, game.config.height/2 + 64, 'Press (R) to Restart or <- for Menu', this.scoreConfig).setOrigin(0.5)
-            this.gameOver = true
-        }
         // check key input for restart
         if(this.gameOver && Phaser.Input.Keyboard.JustDown(keyRESET)) {
             this.scene.restart()
         }
-        this.starfield.tilePositionX -= 4
+        this.starfield.tilePositionX += 2
         if(!this.gameOver) {               
-            this.p1Rocket.update()         // update rocket sprite
-            this.ship01.update()           // update spaceships (x3)
-            this.ship02.update()
-            this.ship03.update()
+            this.p1car.update()         // update car sprite
+            //this.ship01.update()           // update Clowns (x2)
+            this.topclown.update()
+            this.bottomclown.update()
         } 
         // check collisions
-        if(this.checkCollision(this.p1Rocket, this.ship03)) {
-            this.p1Rocket.reset()
-            this.shipExplode(this.ship03)   
+        if(this.checkCollision(this.p1car, this.bottomclown)) {
+            this.p1car.reset()
+            //this.sound.play('sfx-explosion')
+            this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', this.scoreConfig).setOrigin(0.5)
+            this.add.text(game.config.width/2, game.config.height/2 + 64, 'Press (R) to Restart or <- for Menu', this.scoreConfig).setOrigin(0.5)  //COPY THESE FOR COLLISION!
+            this.add.text(game.config.width/2, game.config.height/2 + 90, 'Credits: Assets: Shazer Rizzo, Music: David Fesliyan', this.scoreConfig).setOrigin(0.5)
+            this.gameOver = true
+            this.Music.setLoop(false);
+            this.Music.stop();
+            this.shipExplode(this.bottomclown)   
         }
-        if (this.checkCollision(this.p1Rocket, this.ship02)) {
-            this.p1Rocket.reset()
-            this.shipExplode(this.ship02)
-        }
-        if (this.checkCollision(this.p1Rocket, this.ship01)) {
-            this.p1Rocket.reset()
-            this.shipExplode(this.ship01)
+        if (this.checkCollision(this.p1car, this.topclown)) {
+            this.p1car.reset()
+            this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', this.scoreConfig).setOrigin(0.5)
+            this.add.text(game.config.width/2, game.config.height/2 + 64, 'Press (R) to Restart or <- for Menu', this.scoreConfig).setOrigin(0.5)  //COPY THESE FOR COLLISION!
+            this.add.text(game.config.width/2, game.config.height/2 + 90, 'Credits: Assets: Shazer Rizzo, Music: David Fesliyan', this.scoreConfig).setOrigin(0.5)            
+            this.gameOver = true
+            this.Music.setLoop(false);
+            this.Music.stop();
+            this.shipExplode(this.topclown)
         }
 
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyLEFT)) {
@@ -113,18 +100,18 @@ class Play extends Phaser.Scene {
         }
         
         //Subtract time if Misses Mod 6
-        if(this.p1Rocket.y <= borderUISize * 3 + borderPadding + 2){
+        if(this.p1car.y <= borderUISize * 3 + borderPadding + 2){
             this.initialTime -= 5;
         }
         
     }
 
-    checkCollision(rocket, ship) {
+    checkCollision(car, ship) {
         // simple AABB checking
-        if (rocket.x < ship.x + ship.width && 
-          rocket.x + rocket.width > ship.x && 
-          rocket.y < ship.y + ship.height &&
-          rocket.height + rocket.y > ship. y) {
+        if (car.x < ship.x + ship.width && 
+          car.x + car.width > ship.x && 
+          car.y < ship.y + ship.height &&
+          car.height + car.y > ship. y) {
           return true
         } else {
           return false
@@ -142,27 +129,12 @@ class Play extends Phaser.Scene {
           boom.destroy()                     // remove explosion sprite
         })
         // score add and text update
-        this.p1Score += ship.points
-        this.scoreLeft.text = this.p1Score 
+        //this.p1Score += ship.points
+        //this.scoreLeft.text = this.p1Score 
         //Mod 6
-        this.initialTime += 5;
+        //this.initialTime += 5;
 
-        this.RANDOMSOUND = Math.floor(Math.random() * 5);      //MOD1 Random Sound
-        if (this.RANDOMSOUND == 0){
-            this.sound.play('sfx-explosion')
-        }
-        if (this.RANDOMSOUND == 1){
-            this.sound.play('sfx-explosion1')
-        }  
-        if (this.RANDOMSOUND == 2){
-            this.sound.play('sfx-explosion2')
-        }  
-        if (this.RANDOMSOUND == 3){
-            this.sound.play('sfx-explosion3')
-        }  
-        if (this.RANDOMSOUND == 4){
-            this.sound.play('sfx-explosion4')
-        }        
+        this.sound.play('sfx-explosion4')       
     }
 
     //Mod 5
@@ -180,7 +152,7 @@ class Play extends Phaser.Scene {
     onEvent() {
         this.update();
         if (!this.gameOver) {   //EDGE CASE DONT Subtract from 0
-            this.initialTime -= 1;
+            this.initialTime += 1;
             this.Text.setText('Time:' + this.formatTime(this.initialTime));
         }
     }

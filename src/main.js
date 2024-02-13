@@ -1,6 +1,6 @@
 // Shazer Rizzo
 // Endless Runner: Man-Man vs Killer Clowns
-// 30 hours
+// 22 hours
 // I am proud of being able to implement class techniques taught and being able to implement through my own direction
 
 let config = {

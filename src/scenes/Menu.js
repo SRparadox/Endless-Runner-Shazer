@@ -1,5 +1,5 @@
 //Shazer Rizzo
-//Rocket Patrol Project
+//Endless Runner
 
 class Menu extends Phaser.Scene {
     constructor() {
@@ -8,10 +8,9 @@ class Menu extends Phaser.Scene {
 
     preload() {
         // load images/tile sprites
-        this.load.image('rocket', './assets/rocket.png')
-        this.load.image('spaceship', './assets/spaceship.png')
-        this.load.image('spaceship2', './assets/spaceship2.png') //Mod2 New Ship
-        this.load.image('starfield', './assets/starfield.png')
+        this.load.image('Car', './assets/Car.png')
+        this.load.image('Clown', './assets/Clown.png')
+        this.load.image('City', './assets/City.png')
         this.load.image('TitleScreen', './assets/TitleScreen.png')  //Mod3 Title Screen
         // load spritesheet
         this.load.spritesheet('explosion', './assets/explosion.png', {
@@ -22,12 +21,9 @@ class Menu extends Phaser.Scene {
         })
         // load audio
         this.load.audio('sfx-select', './assets/sfx-select.wav')
-        this.load.audio('sfx-explosion', './assets/sfx-explosion.wav')//Original
-        this.load.audio('sfx-explosion1', './assets/sfx-explosion1.wav') //Mod1 New 1
-        this.load.audio('sfx-explosion2', './assets/sfx-explosion2.wav') //Mod1 New 2
-        this.load.audio('sfx-explosion3', './assets/sfx-explosion3.wav') //Mod1 New 3
         this.load.audio('sfx-explosion4', './assets/sfx-explosion4.wav') //Mod1 New 4
         this.load.audio('sfx-shot', './assets/sfx-shot.wav')
+        this.load.audio('Music', './assets/bgm.wav')
 
     }
 
@@ -42,8 +38,6 @@ class Menu extends Phaser.Scene {
             }),
             frameRate: 30
         })
-        //this.add.text(20, 20, "Rocket Patrol Menu")
-        //this.scene.start("playScene")
         
         let menuConfig = {
             fontFamily: 'Georgia',
@@ -59,11 +53,9 @@ class Menu extends Phaser.Scene {
         }
         //diplay Menu Text
         this.starfield = this.add.tileSprite(0, 0, 640, 480, 'TitleScreen').setOrigin(0, 0)   //BACkground
-        //this.add.text(game.config.width/2, game.config.height/2 - borderUISize - borderPadding, 'ROCKET PATROL', menuConfig).setOrigin(0.5)
-        this.add.text(game.config.width - 150, game.config.height - 70, 'Use <--> arrows to move & (F) to fire', menuConfig).setOrigin(0.5)
+        this.add.text(game.config.width - 150, game.config.height - 70, 'Press F to Jump', menuConfig).setOrigin(0.5)
         menuConfig.backgroundColor = '#00FF00'
         menuConfig.color = '#000'
-        //this.add.text(game.config.width -490, game.config.height - 70 + borderUISize + borderPadding, 'Press <- for Novice or -> for Expert', menuConfig).setOrigin(0.5)
         this.add.text(game.config.width -490, game.config.height - 70, 'Press <- for Novice or -> for Expert', menuConfig).setOrigin(0.5)
         // define keys
         keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT)
@@ -75,7 +67,6 @@ class Menu extends Phaser.Scene {
           // easy mode
           game.settings = {
             spaceshipSpeed: 3,
-            gameTimer: 60000    
           }
           this.sound.play('sfx-select')
           this.scene.start('playScene')    
@@ -84,7 +75,6 @@ class Menu extends Phaser.Scene {
           // hard mode
           game.settings = {
             spaceshipSpeed: 4,
-            gameTimer: 45000    
           }
           this.sound.play('sfx-select')
           this.scene.start('playScene')    
