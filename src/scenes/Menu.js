@@ -1,5 +1,7 @@
 //Shazer Rizzo
-//Endless Runner
+//Endless Runner Project: Man-Man Versus Killer Clowns
+//25 Hours
+//I really tried to use inspiration of very big passions in my life, and one of them is comic books, so I used inspiration from Batman comics to make a wacky game.
 
 class Menu extends Phaser.Scene {
     constructor() {
